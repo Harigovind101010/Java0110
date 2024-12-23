@@ -1,0 +1,177 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+// Class representing a Prisoner
+class Prisoner {
+    private int id;
+    private String name;
+    private int age;
+    private String crime;
+    private int sentenceYears;
+    private boolean isReleased;
+
+    public Prisoner(int id, String name, int age, String crime, int sentenceYears) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.crime = crime;
+        this.sentenceYears = sentenceYears;
+        this.isReleased = false;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public String getCrime() {
+        return crime;
+    }
+
+    public int getSentenceYears() {
+        return sentenceYears;
+    }
+
+    public boolean isReleased() {
+        return isReleased;
+    }
+
+    public void release() {
+        isReleased = true;
+    }
+
+    @Override
+    public String toString() {
+        return "Prisoner{" +
+                "ID=" + id +
+                ", Name='" + name + '\'' +
+                ", Age=" + age +
+                ", Crime='" + crime + '\'' +
+                ", Sentence Years=" + sentenceYears +
+                ", Released=" + isReleased +
+                '}';
+    }
+}
+
+// Class representing the Jail Management System
+class JailManagement {
+    private ArrayList<Prisoner> prisoners = new ArrayList<>();
+    private int nextId = 1;
+
+    public void addPrisoner(String name, int age, String crime, int sentenceYears) {
+        Prisoner prisoner = new Prisoner(nextId++, name, age, crime, sentenceYears);
+        prisoners.add(prisoner);
+        System.out.println("Prisoner added successfully!");
+    }
+
+    public void viewAllPrisoners() {
+        if (prisoners.isEmpty()) {
+            System.out.println("No prisoners in the jail.");
+            return;
+        }
+        for (Prisoner prisoner : prisoners) {
+            System.out.println(prisoner);
+        }
+    }
+
+    public void searchPrisonerById(int id) {
+        for (Prisoner prisoner : prisoners) {
+            if (prisoner.getId() == id) {
+                System.out.println(prisoner);
+                return;
+            }
+        }
+        System.out.println("Prisoner with ID " + id + " not found.");
+    }
+
+    public void releasePrisoner(int id) {
+        for (Prisoner prisoner : prisoners) {
+            if (prisoner.getId() == id) {
+                if (!prisoner.isReleased()) {
+                    prisoner.release();
+                    System.out.println("Prisoner with ID " + id + " has been released.");
+                } else {
+                    System.out.println("Prisoner with ID " + id + " is already released.");
+                }
+                return;
+            }
+        }
+        System.out.println("Prisoner with ID " + id + " not found.");
+    }
+}
+
+// Main class for Jail Management System
+public class JailManagementSystem {
+    private static JailManagement jail = new JailManagement();
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        while (true) {
+            System.out.println("\nJail Management System");
+            System.out.println("1. Add Prisoner");
+            System.out.println("2. View All Prisoners");
+            System.out.println("3. Search Prisoner by ID");
+            System.out.println("4. Release Prisoner");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    addPrisoner();
+                    break;
+                case 2:
+                    jail.viewAllPrisoners();
+                    break;
+                case 3:
+                    searchPrisonerById();
+                    break;
+                case 4:
+                    releasePrisoner();
+                    break;
+                case 5:
+                    System.out.println("Exiting... Goodbye!");
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
+    private static void addPrisoner() {
+        System.out.print("Enter name: ");
+        String name = scanner.nextLine();
+
+        System.out.print("Enter age: ");
+        int age = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        System.out.print("Enter crime: ");
+        String crime = scanner.nextLine();
+
+        System.out.print("Enter sentence years: ");
+        int sentenceYears = scanner.nextInt();
+
+        jail.addPrisoner(name, age, crime, sentenceYears);
+    }
+
+    private static void searchPrisonerById() {
+        System.out.print("Enter prisoner ID to search: ");
+        int id = scanner.nextInt();
+        jail.searchPrisonerById(id);
+    }
+
+    private static void releasePrisoner() {
+        System.out.print("Enter prisoner ID to release: ");
+        int id = scanner.nextInt();
+        jail.releasePrisoner(id);
+    }
+}
